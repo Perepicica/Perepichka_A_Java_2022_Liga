@@ -1,5 +1,6 @@
 package homework2;
 
+import homework2.console.ConsoleHandler;
 import homework2.data.CsvDataLoader;
 import homework2.data.FileType;
 
@@ -23,6 +24,8 @@ public class Main {
         } catch (IOException e) {
             System.out.println("Wrong path of task data storage.");
         }
+
+        ConsoleHandler.askForRequest();
 
     }
 
