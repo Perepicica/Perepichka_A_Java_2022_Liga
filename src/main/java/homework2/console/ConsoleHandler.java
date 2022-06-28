@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConsoleHandler {
-
-    private static String request;
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void askForRequest() {
@@ -29,9 +27,8 @@ public class ConsoleHandler {
     private static int getTheOption(int maxOption) {
         int result;
         while (true) {
-            request = scanner.nextLine();
             try {
-                result = Integer.parseInt(request);
+                result = Integer.parseInt(scanner.nextLine());
                 if (0 < result && result <= maxOption) return result;
                 System.out.println("Wrong option... Try again");
             } catch (NumberFormatException e) {
@@ -116,13 +113,11 @@ public class ConsoleHandler {
         }
     }
 
-
     private static int askForId(String askingString, String errorString) {
         while (true) {
             System.out.println(askingString);
-            request = scanner.nextLine();
             try {
-                return Integer.parseInt(request.trim());
+                return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println(errorString);
             }
