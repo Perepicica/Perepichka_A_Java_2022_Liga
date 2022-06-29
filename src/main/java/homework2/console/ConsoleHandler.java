@@ -9,8 +9,8 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static homework2.console.TaskFunctionality.addTask;
-import static homework2.console.TaskFunctionality.deleteTask;
+import static homework2.console.TaskFunctionality.*;
+import static homework2.data.CsvDataLoader.dateFormat;
 import static homework2.data.CsvDataLoader.formatter;
 
 public class ConsoleHandler {
@@ -20,15 +20,15 @@ public class ConsoleHandler {
         for (; ; ) {
             System.out.println("Select an action:\n" +
                     "[1] Get user tasks\n" +
-                    "[2] Change task status\n" +
-                    "[3] Add Task\n" +
-                    "[4] Delete task\n" +
+                    "[2] Add Task\n" +
+                    "[3] Delete task\n" +
+                    "[4] Edit task \n" +
                     "[5] End the program");
             switch (getTheOption(5)) {
                 case 1 -> askForUserId();
-                case 2 -> askForTaskId();
-                case 3 -> addTask();
-                case 4 -> deleteTask();
+                case 2 -> addTask();
+                case 3 -> deleteTask();
+                case 4 -> editTask();
                 case 5 -> {
                     System.out.println("Exiting...");
                     return;
@@ -37,7 +37,7 @@ public class ConsoleHandler {
         }
     }
 
-    private static int getTheOption(int maxOption) {
+    static int getTheOption(int maxOption) {
         int result;
         while (true) {
             try {
@@ -51,21 +51,9 @@ public class ConsoleHandler {
     }
 
     private static void askForUserId() {
-        while (!checkUserId(askForId("Enter user ID", "User ID should be a number"))) {
-        }
-    }
-
-    private static boolean checkUserId(int id) {
-        User user = DataProvider.getUser(id);
-        if (user == null) {
-            return handleWrongUserId();
-        } else filteringTasks(user);
-        return true;
-    }
-
-    private static boolean handleWrongUserId() {
-        System.out.println("No user with such ID\n[1] Try again\n[2] Go back");
-        return getTheOption(2) == 2;
+        int userId = getUser();
+        if(userId == -1) return;
+        filteringTasks(DataProvider.getUser(userId));
     }
 
 
@@ -110,21 +98,6 @@ public class ConsoleHandler {
         }
     }
 
-    private static void askForTaskId() {
-        while (true) {
-            int id = askForId("Enter task ID", "Task ID should be a number");
-            Optional<Task> task = DataProvider.getUsers().entrySet().stream()
-                    .flatMap(entry -> entry.getValue().getTasks().stream())
-                    .filter(t -> t.getId() == id).findFirst();
-            if (task.isPresent()) {
-                changeTaskStatus(task.get());
-                return;
-            } else {
-                System.out.println("No task with such ID \n[1] Try again\n[2] Go back");
-                if (getTheOption(2) == 2) return;
-            }
-        }
-    }
 
     static int askForId(String askingString, String errorString) {
         while (true) {
@@ -137,24 +110,17 @@ public class ConsoleHandler {
         }
     }
 
-    private static void changeTaskStatus(Task task) {
-        StringBuilder stringBuilder = new StringBuilder("Current status is: ")
-                .append(task.getStatus())
-                .append("\nChose new status:\n");
-        Map<Integer, Task.TaskStatus> statusToChange = new HashMap<>();
-        int option = 1;
-        for (Task.TaskStatus status : Task.TaskStatus.values()) {
-            if (!status.equals(task.getStatus())) {
-                statusToChange.put(option, status);
-                stringBuilder.append("[").append(option).append("] ").append(status).append("\n");
-                option++;
-            }
+    static int getUser() {
+        int userId;
+        while (true) {
+            userId = askForId("Enter user ID", "User ID should be a number");
+            if (DataProvider.getUser(userId) == null) {
+                System.out.println("No user with such ID\n[1] Try again\n[2] Go back");
+                if (getTheOption(2) == 2) return -1;
+            } else return userId;
         }
-        System.out.println(stringBuilder);
-        Task.TaskStatus newStatus = statusToChange.get(getTheOption(Task.TaskStatus.values().length - 1));
-        task.setStatus(newStatus);
-        System.out.println("Task status has been changed to " + newStatus + " successfully!");
     }
+
     static String getString(String message) {
         while (true) {
             System.out.println(message);
@@ -166,10 +132,10 @@ public class ConsoleHandler {
     static LocalDate getDate(String message) {
         while (true) {
             try {
-                System.out.println(message);
+                System.out.println(message+", follow the pattern "+dateFormat);
                 return LocalDate.parse(scanner.nextLine().trim(), formatter);
             } catch (DateTimeParseException e) {
-                System.out.println("Follow the format, please");
+                System.out.println("Follow the pattern, please");
             }
         }
     }

@@ -6,6 +6,7 @@ import homework2.entity.User;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class DataProvider {
 
@@ -29,14 +30,14 @@ public class DataProvider {
         users.get(userId).addTask(new Task(taskId, header, description, deadLine, status));
     }
 
-    public static void deleteTask(int userId, int taskId){
-        getUser(userId).getTasks().removeIf(task -> task.getId()==taskId);
+    public static void deleteTask(int userId, Task task){
+        getUser(userId).getTasks().remove(task);
     }
 
-    public static boolean checkTaskAtUser(int userId, int taskId) {
+    public static Optional<Task> checkTaskAtUser(int userId, int taskId) {
         for (Task task : users.get(userId).getTasks()) {
-            if (task.getId() == taskId) return true;
+            if (task.getId() == taskId) return Optional.of(task);
         }
-        return false;
+        return Optional.empty();
     }
 }

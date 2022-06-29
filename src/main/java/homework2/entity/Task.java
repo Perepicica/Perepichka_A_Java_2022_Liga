@@ -57,6 +57,15 @@ public class Task {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "Id = " + id +
+                "\nHeader = " + header +
+                "\nDescription = " + description +
+                "\nDead line = " + deadLineDate +
+                "\nStatus = " + status;
+    }
+
     public enum TaskStatus {
         NEW("новое"), INWORK("в работе"), DONE("готово");
         private final String russianCode;
