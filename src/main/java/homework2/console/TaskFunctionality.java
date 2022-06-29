@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static homework2.console.ConsoleHandler.*;
+import static homework2.console.UserFunctionality.getUser;
 
 public class TaskFunctionality {
     static void addTask() {
