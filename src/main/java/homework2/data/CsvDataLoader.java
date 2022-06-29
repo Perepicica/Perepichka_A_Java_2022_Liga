@@ -14,7 +14,8 @@ import java.time.format.DateTimeParseException;
 
 public class CsvDataLoader {
 
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.MM.yyyy");
+    public final static String dateFormat = "d.MM.yyyy";
+    public final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
 
     public static void readData(String fileName, FileType type) throws IOException {
 
@@ -79,8 +80,7 @@ public class CsvDataLoader {
                     new NoUserTask(taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW, userId));
         }
 
-        DataProvider.addTaskToUser(userId,
-                new Task(taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW));
+        DataProvider.addTaskToUser(userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW);
     }
 
     private static int parseId(String idStr, int pointer, String line) {
