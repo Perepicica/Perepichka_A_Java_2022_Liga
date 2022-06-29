@@ -9,6 +9,8 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static homework2.console.TaskFunctionality.addTask;
+import static homework2.console.TaskFunctionality.deleteTask;
 import static homework2.data.CsvDataLoader.formatter;
 
 public class ConsoleHandler {
@@ -16,12 +18,18 @@ public class ConsoleHandler {
 
     public static void askForRequest() {
         for (; ; ) {
-            System.out.println("Select an action:\n[1] Get user tasks\n[2] Change task status\n[3] Add Task\n[4] End the program");
-            switch (getTheOption(3)) {
+            System.out.println("Select an action:\n" +
+                    "[1] Get user tasks\n" +
+                    "[2] Change task status\n" +
+                    "[3] Add Task\n" +
+                    "[4] Delete task\n" +
+                    "[5] End the program");
+            switch (getTheOption(5)) {
                 case 1 -> askForUserId();
                 case 2 -> askForTaskId();
                 case 3 -> addTask();
-                case 4 -> {
+                case 4 -> deleteTask();
+                case 5 -> {
                     System.out.println("Exiting...");
                     return;
                 }
@@ -118,7 +126,7 @@ public class ConsoleHandler {
         }
     }
 
-    private static int askForId(String askingString, String errorString) {
+    static int askForId(String askingString, String errorString) {
         while (true) {
             System.out.println(askingString);
             try {
@@ -147,32 +155,7 @@ public class ConsoleHandler {
         task.setStatus(newStatus);
         System.out.println("Task status has been changed to " + newStatus + " successfully!");
     }
-
-    private static void addTask() {
-        boolean noUser = false;
-        int userId = askForId("Enter user ID", "User ID should be a number");
-        if (DataProvider.getUser(userId) == null) {
-            System.out.println("Warning: No user with such Id");
-            noUser = true;
-        }
-        int taskId;
-        while (true) {
-            taskId = askForId("Enter task ID", "Task ID should be a number");
-            if (noUser) break;
-            if (DataProvider.checkTaskAtUser(userId, taskId)) {
-                System.out.println("This user already has task with such ID, try another");
-            } else {
-                break;
-            }
-        }
-        String header = getString("Enter task header");
-        String description = getString("Enter task description");
-        LocalDate deadLine = getDate("Enter dead line, follow format: " + formatter);
-        DataProvider.addTaskToUser(userId, taskId, header, description, deadLine, Task.TaskStatus.NEW);
-        System.out.println("Task was added successfully");
-    }
-
-    private static String getString(String message) {
+    static String getString(String message) {
         while (true) {
             System.out.println(message);
             String result = scanner.nextLine();
@@ -180,7 +163,7 @@ public class ConsoleHandler {
         }
     }
 
-    private static LocalDate getDate(String message) {
+    static LocalDate getDate(String message) {
         while (true) {
             try {
                 System.out.println(message);

@@ -29,6 +29,10 @@ public class DataProvider {
         users.get(userId).addTask(new Task(taskId, header, description, deadLine, status));
     }
 
+    public static void deleteTask(int userId, int taskId){
+        getUser(userId).getTasks().removeIf(task -> task.getId()==taskId);
+    }
+
     public static boolean checkTaskAtUser(int userId, int taskId) {
         for (Task task : users.get(userId).getTasks()) {
             if (task.getId() == taskId) return true;
