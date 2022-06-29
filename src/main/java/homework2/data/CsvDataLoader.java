@@ -1,6 +1,5 @@
 package homework2.data;
 
-import homework2.entity.NoUserTask;
 import homework2.entity.Task;
 import homework2.entity.User;
 
@@ -76,8 +75,8 @@ public class CsvDataLoader {
         }
 
         if (DataProvider.getUser(userId) == null) {
-            DataProvider.addNoUserTask(
-                    new NoUserTask(taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW, userId));
+            DataProvider.addTaskToUser(
+                    userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW);
         }
 
         DataProvider.addTaskToUser(userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW);
