@@ -59,7 +59,10 @@ public class CsvDataLoader {
     private static void parseTaskLine(String line, int pointer) {
 
         String[] lineParts = line.split(",");
-        if (lineParts.length != 5 || lineParts[1].trim().length() == 0 || lineParts[2].trim().length() == 0) {
+        if (lineParts.length < 5
+                || lineParts.length > 6
+                || lineParts[1].trim().length() == 0
+                || lineParts[2].trim().length() == 0) {
             throw new IllegalArgumentException(
                     "Wrong data: task data storage, line " + pointer + " : " + "\"" + line + "\"");
         }

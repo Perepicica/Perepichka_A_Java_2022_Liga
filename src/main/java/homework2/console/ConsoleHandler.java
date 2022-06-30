@@ -1,5 +1,7 @@
 package homework2.console;
 
+import homework2.data.DataProvider;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -12,22 +14,24 @@ import static homework2.data.CsvDataLoader.formatter;
 public class ConsoleHandler {
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void askForRequest() {
+    public static boolean askForRequest() {
         for (; ; ) {
             System.out.println("Select an action:\n" +
                     "[1] Get user tasks\n" +
                     "[2] Add Task\n" +
                     "[3] Delete task\n" +
                     "[4] Edit task \n" +
-                    "[5] End the program");
-            switch (getTheOption(5)) {
+                    "[5] Delete all data \n" +
+                    "[6] End the program");
+            switch (getTheOption(6)) {
                 case 1 -> askForUserId();
                 case 2 -> addTask();
                 case 3 -> deleteTask();
                 case 4 -> editTask();
-                case 5 -> {
+                case 5 -> deleteAllData();
+                case 6 -> {
                     System.out.println("Exiting...");
-                    return;
+                    return saveData();
                 }
             }
         }
@@ -68,11 +72,21 @@ public class ConsoleHandler {
     static LocalDate getDate(String message) {
         while (true) {
             try {
-                System.out.println(message+", follow the pattern "+dateFormat);
+                System.out.println(message + ", follow the pattern " + dateFormat);
                 return LocalDate.parse(scanner.nextLine().trim(), formatter);
             } catch (DateTimeParseException e) {
                 System.out.println("Follow the pattern, please");
             }
         }
+    }
+
+    static void deleteAllData(){
+        DataProvider.getUsers().clear();
+        System.out.println("All data was deleted. Do not forget to save changes while exiting program");
+    }
+
+    static boolean saveData() {
+        System.out.println("Save data changes? \n[1] Yes\n[2] No");
+        return getTheOption(2) == 1;
     }
 }

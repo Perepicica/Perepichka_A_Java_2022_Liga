@@ -2,6 +2,7 @@ package homework2;
 
 import homework2.console.ConsoleHandler;
 import homework2.data.CsvDataLoader;
+import homework2.data.CvsDataWriter;
 import homework2.data.FileType;
 
 import java.io.IOException;
@@ -25,7 +26,13 @@ public class Main {
             System.out.println("Wrong path of task data storage.");
         }
 
-        ConsoleHandler.askForRequest();
+        if(!ConsoleHandler.askForRequest()) return;
+
+        try {
+            CvsDataWriter.writeDataToFiles(args[0],args[1]);
+        } catch (IOException e){
+            System.out.println("Something went wrong during data saving...");
+        }
 
     }
 
