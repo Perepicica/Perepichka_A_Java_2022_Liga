@@ -81,8 +81,10 @@ public class CsvDataLoader {
             DataProvider.addTaskToUser(
                     userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW);
         }
+        Task.TaskStatus status = Task.TaskStatus.NEW;
+        if (lineParts.length == 6) status = getStatus(lineParts[5],pointer,line);
 
-        DataProvider.addTaskToUser(userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, Task.TaskStatus.NEW);
+        DataProvider.addTaskToUser(userId, taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, status);
     }
 
     private static int parseId(String idStr, int pointer, String line) {
@@ -92,6 +94,14 @@ public class CsvDataLoader {
             throw new IllegalArgumentException(
                     "Wrong id: Data storage, line " + pointer + " : " + "\"" + line + "\"");
         }
+    }
+
+    private static Task.TaskStatus getStatus(String status, int pointer, String line) {
+        for(Task.TaskStatus st: Task.TaskStatus.values()){
+            if (st.name().equals(status)) return st;
+        }
+        throw new IllegalArgumentException(
+                "Wrong id: Data storage, line " + pointer + " : " + "\"" + line + "\"");
     }
 
 }

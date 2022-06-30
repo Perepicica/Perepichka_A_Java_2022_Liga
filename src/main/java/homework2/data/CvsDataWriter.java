@@ -4,6 +4,8 @@ import homework2.entity.Task;
 
 import java.io.*;
 
+import static homework2.data.CsvDataLoader.formatter;
+
 
 public class CvsDataWriter {
 
@@ -28,7 +30,7 @@ public class CvsDataWriter {
                         task.getHeader(),
                         task.getDescription(),
                         entry.getKey(),
-                        task.getDeadLineDate(),
+                        task.getDeadLineDate().format(formatter),
                         task.getStatus());
             }
         }
